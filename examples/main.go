@@ -1,5 +1,12 @@
-// Package main demonstrates basic usage of the goflow package: it starts an
-// HTTP server on port 8080 and replies "Hello World" to every request.
+// Package main demonstrates the simplest goflow program: it starts an HTTP
+// server on port 8080 and replies "Hello World" to every request.
+//
+// Run:
+//
+//	go run ./examples
+//
+// More focused examples live in the subdirectories of this directory:
+// ./json, ./middleware, ./pathparams and ./request.
 package main
 
 import (
@@ -15,7 +22,7 @@ func main() {
 		ctx := goflow.Context(w, r)
 
 		// Send a plain-text response with status 200 OK.
-		ctx.SendString(200, "Hello World")
+		ctx.SendString(http.StatusOK, "Hello World")
 	})
 
 	// Start the server on port 8080. The error is ignored for brevity.

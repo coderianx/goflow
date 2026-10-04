@@ -6,7 +6,10 @@
 // plain-text and JSON responses.
 package goflow
 
-import "net/http"
+import (
+	"net/http"
+	"strconv"
+)
 
 // Ctx represents the context of a single HTTP request/response cycle.
 // A new Ctx is created for every request that is handled.
@@ -28,4 +31,33 @@ func Context(
 		Writer:  w,
 		Request: r,
 	}
+}
+
+// Param returns the value of the path parameter with the given name.
+//
+// It delegates to [http.Request.PathValue], so it works with the wildcard
+// patterns registered on an [http.ServeMux], such as "GET /users/{id}".
+func (c *Ctx) Param(name string) string {
+	// The captured values are stored on the request by http.ServeMux before
+	// the handler is called.
+	return c.Request.PathValue(name)
+}
+
+func (c *Ctx) ParamInt(name string) (int, error) {
+	result, err := strconv.Atoi(
+		c.Request.PathValue(name),
+	)
+
+	return result, err
+
+}
+
+func (c *Ctx) Query(name string) string {
+	return c.Request.URL.Query().Get(name)
+}
+
+func (c *Ctx) QueryInt(name string) (int, error) {
+	return strconv.Atoi(
+		c.Request.URL.Query().Get(name),
+	)
 }
