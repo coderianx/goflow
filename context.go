@@ -3,7 +3,8 @@
 //
 // Each incoming request is wrapped in a [Ctx], which exposes the underlying
 // [http.ResponseWriter] and [http.Request] together with helpers for writing
-// plain-text and JSON responses.
+// plain-text, JSON and HTML responses, sending redirects and reading path and
+// query parameters.
 package goflow
 
 import (
@@ -43,19 +44,26 @@ func (c *Ctx) Param(name string) string {
 	return c.Request.PathValue(name)
 }
 
+// ParamInt returns the value of the path parameter with the given name
+// parsed as an integer. It returns an error if the parameter is missing or
+// cannot be parsed with [strconv.Atoi].
 func (c *Ctx) ParamInt(name string) (int, error) {
 	result, err := strconv.Atoi(
 		c.Request.PathValue(name),
 	)
 
 	return result, err
-
 }
 
+// Query returns the first value of the query parameter with the given name,
+// or an empty string when the parameter is absent.
 func (c *Ctx) Query(name string) string {
 	return c.Request.URL.Query().Get(name)
 }
 
+// QueryInt returns the first value of the query parameter with the given name
+// parsed as an integer. It returns an error if the parameter is missing or
+// cannot be parsed with [strconv.Atoi].
 func (c *Ctx) QueryInt(name string) (int, error) {
 	return strconv.Atoi(
 		c.Request.URL.Query().Get(name),

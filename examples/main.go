@@ -6,7 +6,7 @@
 //	go run ./examples
 //
 // More focused examples live in the subdirectories of this directory:
-// ./json, ./middleware, ./pathparams and ./request.
+// ./html, ./json, ./middleware, ./pathparams, ./redirect and ./request.
 package main
 
 import (
