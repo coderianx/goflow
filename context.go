@@ -69,3 +69,36 @@ func (c *Ctx) QueryInt(name string) (int, error) {
 		c.Request.URL.Query().Get(name),
 	)
 }
+
+// QueryInt64 returns the first value of the query parameter with the given name
+// parsed as an int64. It returns an error if the parameter is missing or
+// cannot be parsed with [strconv.ParseInt].
+func (c *Ctx) QueryInt64(name string) (int64, error) {
+	val, err := strconv.ParseInt(
+		c.Request.URL.Query().Get(name), 10, 64,
+	)
+
+	return val, err
+}
+
+// QueryFloat returns the first value of the query parameter with the given name
+// parsed as a float64. It returns an error if the parameter is missing or
+// cannot be parsed with [strconv.ParseFloat].
+func (c *Ctx) QueryFloat(name string) (float64, error) {
+	val, err := strconv.ParseFloat(
+		c.Request.URL.Query().Get(name), 64,
+	)
+
+	return val, err
+}
+
+// QueryBool returns the first value of the query parameter with the given name
+// parsed as a boolean. It returns an error if the parameter is missing or
+// cannot be parsed with [strconv.ParseBool].
+func (c *Ctx) QueryBool(name string) (bool, error) {
+	val, err := strconv.ParseBool(
+		c.Request.URL.Query().Get(name),
+	)
+
+	return val, err
+}
