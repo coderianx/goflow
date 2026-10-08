@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+type H map[string]any
+
 // SendString writes a plain-text response with the given HTTP status code.
 // It sets the Content-Type header to "text/plain; charset=utf-8".
 func (c *Ctx) SendString(status int, data string) {
@@ -60,6 +62,25 @@ func (c *Ctx) SendHTML(path string) {
 	// Render the template. The error is ignored because the headers have
 	// already been sent by the time execution can fail.
 	tmpl.Execute(c.Writer, nil)
+}
+
+// Render renders the template at path with the given data, writing the result to w.
+// It returns an error if the template cannot be parsed or executed.
+// The template is parsed with [html/template.ParseFiles] and executed with [template.Must].
+func Render(w io.Writer, path string, data any) error {
+	tmpl := template.Must(template.ParseFiles(path))
+	return tmpl.Execute(w, data)
+}
+
+// SendHTMLWithData sends an HTML response with the given status code and data.
+// It sets the Content-Type header to "text/html; charset=utf-8" and writes the
+// status code before rendering the template.
+func (c *Ctx) SendHTMLWithData(status int, path string, data any) error {
+	c.Writer.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	c.Writer.WriteHeader(status)
+
+	return Render(c.Writer, path, data)
 }
 
 // Redirect sends an HTTP redirect to url with the given status code, such as
