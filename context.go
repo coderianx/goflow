@@ -61,6 +61,18 @@ func (c *Ctx) Query(name string) string {
 	return c.Request.URL.Query().Get(name)
 }
 
+// QueryDefault returns the first value of the query parameter with the given
+// name, or the fallback value when the parameter is absent or empty.
+func (c *Ctx) QueryDefault(name, fallback string) string {
+	value := c.Query(name)
+
+	if value == "" {
+		return fallback
+	}
+
+	return value
+}
+
 // QueryInt returns the first value of the query parameter with the given name
 // parsed as an integer. It returns an error if the parameter is missing or
 // cannot be parsed with [strconv.Atoi].
@@ -70,12 +82,46 @@ func (c *Ctx) QueryInt(name string) (int, error) {
 	)
 }
 
+// QueryIntDefault returns the first value of the query parameter with the
+// given name parsed as an integer, or the fallback value when the parameter
+// is absent or empty. It returns an error if the parameter is present but
+// cannot be parsed with [strconv.Atoi].
+func (c *Ctx) QueryIntDefault(name string, fallback int) (int, error) {
+	value := c.Query(name)
+
+	if value == "" {
+		return fallback, nil
+	}
+
+	val, err := strconv.Atoi(value)
+
+	return val, err
+}
+
 // QueryInt64 returns the first value of the query parameter with the given name
 // parsed as an int64. It returns an error if the parameter is missing or
 // cannot be parsed with [strconv.ParseInt].
 func (c *Ctx) QueryInt64(name string) (int64, error) {
 	val, err := strconv.ParseInt(
 		c.Request.URL.Query().Get(name), 10, 64,
+	)
+
+	return val, err
+}
+
+// QueryInt64Default returns the first value of the query parameter with the
+// given name parsed as an int64, or the fallback value when the parameter
+// is absent or empty. It returns an error if the parameter is present but
+// cannot be parsed with [strconv.ParseInt].
+func (c *Ctx) QueryInt64Default(name string, fallback int64) (int64, error) {
+	value := c.Query(name)
+
+	if value == "" {
+		return fallback, nil
+	}
+
+	val, err := strconv.ParseInt(
+		value, 10, 64,
 	)
 
 	return val, err
@@ -92,6 +138,24 @@ func (c *Ctx) QueryFloat(name string) (float64, error) {
 	return val, err
 }
 
+// QueryFloatDefault returns the first value of the query parameter with the
+// given name parsed as a float64, or the fallback value when the parameter
+// is absent or empty. It returns an error if the parameter is present but
+// cannot be parsed with [strconv.ParseFloat].
+func (c *Ctx) QueryFloatDefault(name string, fallback float64) (float64, error) {
+	value := c.Query(name)
+
+	if value == "" {
+		return fallback, nil
+	}
+
+	val, err := strconv.ParseFloat(
+		value, 64,
+	)
+
+	return val, err
+}
+
 // QueryBool returns the first value of the query parameter with the given name
 // parsed as a boolean. It returns an error if the parameter is missing or
 // cannot be parsed with [strconv.ParseBool].
@@ -99,6 +163,22 @@ func (c *Ctx) QueryBool(name string) (bool, error) {
 	val, err := strconv.ParseBool(
 		c.Request.URL.Query().Get(name),
 	)
+
+	return val, err
+}
+
+// QueryBoolDefault returns the first value of the query parameter with the
+// given name parsed as a boolean, or the fallback value when the parameter
+// is absent or empty. It returns an error if the parameter is present but
+// cannot be parsed with [strconv.ParseBool].
+func (c *Ctx) QueryBoolDefault(name string, fallback bool) (bool, error) {
+	value := c.Query(name)
+
+	if value == "" {
+		return fallback, nil
+	}
+
+	val, err := strconv.ParseBool(value)
 
 	return val, err
 }
