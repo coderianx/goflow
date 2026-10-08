@@ -102,3 +102,15 @@ func (c *Ctx) QueryBool(name string) (bool, error) {
 
 	return val, err
 }
+
+// Header returns the value of the given header name. It returns an empty
+// string when the header is not present. The name is case-insensitive.
+func (c *Ctx) Header(name string) string {
+	return c.Request.Header.Get(name)
+}
+
+// HeaderSet sets the given header name to the specified value. It replaces
+// any existing values for that header. The name is case-insensitive.
+func (c *Ctx) HeaderSet(key, value string) {
+	c.Writer.Header().Set(key, value)
+}
